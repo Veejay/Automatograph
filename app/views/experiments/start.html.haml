@@ -1,0 +1,67 @@
+#main
+  .header
+  .question
+  .answer
+    = label_tag "answer_1", "YES"
+    = radio_button_tag "answer", "1"
+    %br
+    = label_tag "answer_1", "NO"
+    = radio_button_tag "answer", "0"
+    %br
+    %button.next="Next" 
+
+  .footer
+
+:javascript
+  window.automatograph = {};
+  _.each(['header', 'question', 'footer'], function(elem) {
+    window.automatograph[elem] = $('#main .' + elem);
+  });
+  automatograph.button = $('#main .answer button.next');
+  automatograph.questions = #{@questions};
+  automatograph.instructions = #{@instructions};
+  automatograph.scenario = [1, 2, 2].concat(_.flatten(_.map(_.shuffle([3,4,5,6]), function(e){return [e,e]}))).concat([1]);
+  automatograph.trialNumber = 1;
+
+  displayScreen(automatograph.scenario.shift());
+
+
+  function displayScreen(instruction_id){
+    question = _.detect(automatograph.questions.block1, function(q){
+      return !q.used && q.instruction_id == instruction_id
+    });
+    question.used = true
+    var instruction = _.detect(automatograph.instructions, function(i){
+      return i.id == instruction_id;
+    });
+    automatograph.button.data('question-id', question.id);
+    automatograph.header.text(instruction.header);
+    automatograph.question.text(question.text);
+    automatograph.footer.text(instruction.footer);
+    automatograph.trialNumber++;
+  }
+  $('button.next').live("click", function(){
+    if(!automatograph.length){
+      alert("DONE WITH PART ONE")
+    }
+    else{
+      // SHOW NEXT QUESTION/SCREEN
+      displayScreen(automatograph.scenario.shift());
+      // SEND DATA TO SERVER
+      $.ajax({
+        url: "#{answers_path}",
+        type: "POST",
+        data: {
+          user_id: 2,
+          session_id: 1,
+          block_id: 1,
+          question_id: $(this).data('question-id'),
+          trialNumber: automatograph.trialNumber;
+          answer: $('.answer input[type=radio]:checked').val()
+        },
+        dataType: "json",
+        success: function(data, textStatus, jqXHR){
+        }
+      });
+    });
+  });

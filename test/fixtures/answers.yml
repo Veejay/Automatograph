@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_id: 
+  session_id: 
+  block_id: 
+  question_id: 
+  trial_number: 
+  instruction_id: 
+  answer: false
+
+two:
+  user_id: 
+  session_id: 
+  block_id: 
+  question_id: 
+  trial_number: 
+  instruction_id: 
+  answer: false

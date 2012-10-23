@@ -1,0 +1,33 @@
+%section
+  %h1= 'Automatograph'
+  = form_for @user do |f|
+    = f.label :first_name
+    = f.text_field :first_name
+    %br
+    = f.label :last_name
+    = f.text_field :last_name
+    %br
+    = f.label :uid, "Unique participant identifier"
+    = f.number_field :uid
+    %br
+    = f.label :age
+    = f.select :age, Range.new(18, 99).map { |age| [age, age] }
+    %br
+    = f.radio_button :gender, false, {:checked => true}
+    = f.label :gender_male, "I am male"
+    %br
+    = f.radio_button :gender, true 
+    = f.label :gender_female, "I am female"
+    %br
+    = f.submit "Start experiment"
+
+  %br
+
+  = "OR GO TO SECOND SESSION"
+
+  %br
+
+  = form_tag sessions_path do 
+    .field 
+      = label_tag "uid", "Unique User Identifier"
+      = text_field_tag "uid"
